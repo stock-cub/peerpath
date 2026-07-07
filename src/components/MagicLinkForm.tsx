@@ -1,6 +1,6 @@
 "use client";
 
-// A two-step form: enter your UofT email, then enter the 6-digit code from
+// A two-step form: enter your UofT email, then enter the 8-digit code from
 // that email. No link to click — sidesteps every issue that comes with
 // clickable links (Microsoft Safe Links prefetching, cross-device/browser
 // mismatches, etc).
@@ -54,12 +54,12 @@ export default function MagicLinkForm({ ctaLabel }: { ctaLabel: string }) {
       <form onSubmit={handleVerifyCode} className="flex flex-col gap-3">
         <div className="rounded-2xl bg-blue-950/50 border border-blue-800 p-4">
           <p className="text-sm text-blue-200">
-            We sent a 6-digit code to <span className="font-medium">{email}</span>.
+            We sent a 8-digit code to <span className="font-medium">{email}</span>.
             Enter it below.
           </p>
         </div>
         <label htmlFor="code" className="text-sm font-medium text-slate-300">
-          6-digit code
+          8-digit code
         </label>
         <input
           id="code"
@@ -67,7 +67,8 @@ export default function MagicLinkForm({ ctaLabel }: { ctaLabel: string }) {
           inputMode="numeric"
           autoFocus
           required
-          placeholder="123456"
+          placeholder="12345678"
+          maxLength={8}
           value={code}
           onChange={(e) => setCode(e.target.value)}
           className="rounded-xl border border-slate-600 bg-slate-800/60 px-4 py-3 text-center text-lg tracking-widest text-white placeholder:text-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
