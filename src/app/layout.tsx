@@ -13,8 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://peerpath.business"),
   title: "PeerPath",
   description: "Find your people at Rotman.",
+  openGraph: {
+    title: "Find your people anywhere",
+    description: "Find your people at Rotman.",
+    siteName: "PeerPath",
+  },
+  twitter: {
+    card: "summary",
+    title: "Find your people anywhere",
+    description: "Find your people at Rotman.",
+  },
 };
 
 export default function RootLayout({
