@@ -16,32 +16,29 @@ export default async function AdminPage() {
 
   const supabase = await createClient();
 
-  const { data: pendingMentors } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("is_mentor", true)
-    .eq("is_mentor_approved", false)
-    .order("created_at", { ascending: true });
-
-  const { data: approvedMentors } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("is_mentor", true)
-    .eq("is_mentor_approved", true)
-    .order("full_name");
-
-  const { data: allRequests } = await supabase
-    .from("match_requests")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const [
+    { data: pendingMentors },
+    { data: approvedMentors },
+    { data: allRequests },
+    { data: allReports },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("is_mentor", true)
+      .eq("is_mentor_approved", false)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("is_mentor", true)
+      .eq("is_mentor_approved", true)
+      .order("full_name"),
+    supabase.from("match_requests").select("*").order("created_at", { ascending: false }),
+    supabase.from("reports").select("*").order("created_at", { ascending: false }),
+  ]);
 
   const requestList = (allRequests ?? []) as MatchRequest[];
-
-  const { data: allReports } = await supabase
-    .from("reports")
-    .select("*")
-    .order("created_at", { ascending: false });
-
   const reportList = (allReports ?? []) as Report[];
 
   const peopleIds = [

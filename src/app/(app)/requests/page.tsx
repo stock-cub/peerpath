@@ -1,40 +1,32 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/user";
 import RequestCard from "@/components/RequestCard";
 import type { MatchRequest } from "@/lib/match-request";
 import type { Profile } from "@/lib/profile";
 
 export default async function RequestsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
-  const { data: myProfile } = await supabase
-    .from("profiles")
-    .select("is_mentor")
-    .eq("id", user?.id ?? "")
-    .maybeSingle();
-
-  const isMentor = (myProfile as Pick<Profile, "is_mentor"> | null)?.is_mentor ?? false;
-
-  const { data: sent } = await supabase
-    .from("match_requests")
-    .select("*")
-    .eq("mentee_id", user?.id ?? "")
-    .order("created_at", { ascending: false });
-
-  const sentList = (sent ?? []) as MatchRequest[];
-
-  let receivedList: MatchRequest[] = [];
-  if (isMentor) {
-    const { data: received } = await supabase
+  // Independent queries, fetched in parallel instead of one-at-a-time.
+  const [{ data: myProfile }, { data: sent }, { data: received }] = await Promise.all([
+    supabase.from("profiles").select("is_mentor").eq("id", user?.id ?? "").maybeSingle(),
+    supabase
+      .from("match_requests")
+      .select("*")
+      .eq("mentee_id", user?.id ?? "")
+      .order("created_at", { ascending: false }),
+    supabase
       .from("match_requests")
       .select("*")
       .eq("mentor_id", user?.id ?? "")
-      .order("created_at", { ascending: false });
-    receivedList = (received ?? []) as MatchRequest[];
-  }
+      .order("created_at", { ascending: false }),
+  ]);
+
+  const isMentor = (myProfile as Pick<Profile, "is_mentor"> | null)?.is_mentor ?? false;
+  const sentList = (sent ?? []) as MatchRequest[];
+  const receivedList = isMentor ? ((received ?? []) as MatchRequest[]) : [];
 
   // Look up display names: mentors for the "sent" list, mentees for "received".
   const idsToLookUp = [

@@ -27,6 +27,20 @@ export async function sendMagicLink(
   });
 
   if (error) {
+    console.error("sendMagicLink error:", {
+      code: error.code,
+      message: error.message,
+      status: error.status,
+      name: error.name,
+    });
+
+    if (error.code === "over_email_send_rate_limit") {
+      return {
+        error:
+          "Too many login attempts right now. Please wait a minute and try again.",
+      };
+    }
+
     return { error: "Something went wrong sending your link. Please try again." };
   }
 

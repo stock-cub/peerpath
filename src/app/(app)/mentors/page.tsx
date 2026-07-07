@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/user";
 import MentorCard from "@/components/MentorCard";
 import { HELP_AREAS, type Profile } from "@/lib/profile";
 
@@ -10,9 +11,7 @@ export default async function MentorsPage({
 }) {
   const { area } = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   const { data: blocked } = await supabase
     .from("blocks")

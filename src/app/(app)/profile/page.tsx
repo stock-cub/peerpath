@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/user";
 import ProfileForm from "@/components/ProfileForm";
 import type { Profile } from "@/lib/profile";
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login");
   }
+
+  const supabase = await createClient();
 
   let { data: profile } = await supabase
     .from("profiles")

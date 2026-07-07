@@ -14,6 +14,7 @@ const LINKS = [
   { href: "/requests", label: "My requests" },
   { href: "/requests/new", label: "Get matched" },
   { href: "/messages", label: "Messages" },
+  { href: "/study-groups", label: "Study groups" },
 ];
 
 export default function Sidebar({ isAdmin }: { isAdmin: boolean }) {
