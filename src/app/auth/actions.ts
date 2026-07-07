@@ -46,3 +46,32 @@ export async function sendMagicLink(
 
   return { success: true };
 }
+
+export type VerifyCodeResult = { error: string } | { success: true };
+
+// Verifies the 6-digit code from the email directly — no link to click,
+// so there's nothing for email security scanners (like Microsoft 365 Safe
+// Links) to prematurely consume, and no dependency on using the same
+// browser that requested the code.
+export async function verifyEmailCode(
+  email: string,
+  code: string
+): Promise<VerifyCodeResult> {
+  if (!code.trim()) {
+    return { error: "Enter the code from your email." };
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token: code.trim(),
+    type: "email",
+  });
+
+  if (error) {
+    return { error: "That code didn't work. Check it and try again, or request a new one." };
+  }
+
+  return { success: true };
+}
