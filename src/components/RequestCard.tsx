@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { STATUS_LABELS, STATUS_COLORS, type MatchRequest } from "@/lib/match-request";
+import RequestAcceptControls from "@/components/RequestAcceptControls";
 
 export default function RequestCard({
   request,
   title,
+  canRespond,
 }: {
   request: MatchRequest;
   title: string;
+  canRespond?: boolean;
 }) {
   const isMatched = request.status === "matched" || request.status === "connected";
 
@@ -22,6 +25,9 @@ export default function RequestCard({
       </div>
       {request.message && (
         <p className="mt-2 text-sm text-slate-300">{request.message}</p>
+      )}
+      {canRespond && request.status === "new" && (
+        <RequestAcceptControls requestId={request.id} />
       )}
       {isMatched && (
         <>

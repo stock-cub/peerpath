@@ -32,6 +32,33 @@ export async function requestMentor(
   return { success: true };
 }
 
+// Used by a mentor on a request sent directly to them — no admin needed.
+export async function respondToRequest(
+  requestId: string,
+  accept: boolean
+): Promise<SubmitRequestResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { error } = await supabase
+    .from("match_requests")
+    .update({ status: accept ? "matched" : "closed" })
+    .eq("id", requestId)
+    .eq("mentor_id", user.id);
+
+  if (error) {
+    return { error: "Couldn't update the request. Please try again." };
+  }
+
+  return { success: true };
+}
+
 // Used from the "help me get matched" form: no specific mentor chosen yet.
 export async function requestOpenMatch(message: string): Promise<SubmitRequestResult> {
   const supabase = await createClient();

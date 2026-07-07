@@ -114,6 +114,7 @@ export default async function RequestsPage() {
                     key={request.id}
                     request={request}
                     title={`From ${names[request.mentee_id] ?? "a mentee"}`}
+                    canRespond
                   />
                 ))}
               </div>
