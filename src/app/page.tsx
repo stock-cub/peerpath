@@ -8,8 +8,13 @@ export default function HomePage() {
           PeerPath
         </h1>
         <p className="mt-4 text-lg text-slate-300">
-          Find your people at Rotman. Get matched with an upper-year mentor
-          who&apos;s been exactly where you are.
+          Find your people at Rotman. First-years get matched with an
+          upper-year mentor who&apos;s been exactly where you are.
+        </p>
+        <p className="mt-2 text-lg text-slate-300">
+          Already past year one? Find ambitious peers, teammates for your
+          next case comp, and people building in your program — not just
+          mentees to take on.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link

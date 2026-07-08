@@ -25,7 +25,8 @@ export async function saveProfile(formData: FormData): Promise<SaveProfileResult
     headline: String(formData.get("headline") ?? "").trim(),
     bio: String(formData.get("bio") ?? "").trim(),
     is_mentor: isMentor,
-    mentor_help_areas: isMentor ? formData.getAll("mentor_help_areas").map(String) : [],
+    can_help_with: formData.getAll("can_help_with").map(String),
+    looking_for: formData.getAll("looking_for").map(String),
     mentor_availability: isMentor
       ? (String(formData.get("mentor_availability") ?? "") || null)
       : null,

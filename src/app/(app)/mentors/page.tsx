@@ -28,7 +28,7 @@ export default async function MentorsPage({
     .order("full_name");
 
   if (area) {
-    query = query.contains("mentor_help_areas", [area]);
+    query = query.contains("can_help_with", [area]);
   }
   if (blockedIds.length > 0) {
     query = query.not("id", "in", `(${blockedIds.join(",")})`);
@@ -42,9 +42,9 @@ export default async function MentorsPage({
       <div className="mx-auto max-w-4xl">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-white">Find a mentor</h1>
+            <h1 className="text-2xl font-semibold text-white">Find people</h1>
             <p className="mt-1 text-slate-300">
-              Upper-year Rotman students who&apos;ve been where you are.
+              Mentors, study partners, and collaborators across every year.
             </p>
           </div>
           <Link

@@ -1,5 +1,5 @@
 // Shared shape of a PeerPath profile row, plus the constants used to build
-// the profile form (year options, mentor help areas, etc).
+// the profile form (year options, help areas, etc).
 
 export type MentorAvailability = "one_off" | "ongoing";
 
@@ -11,7 +11,8 @@ export type Profile = {
   headline: string;
   bio: string;
   is_mentor: boolean;
-  mentor_help_areas: string[];
+  can_help_with: string[];
+  looking_for: string[];
   mentor_availability: MentorAvailability | null;
   is_mentor_approved: boolean;
   is_suspended: boolean;
@@ -25,6 +26,7 @@ export const YEAR_OPTIONS = [
   "5th year+",
 ] as const;
 
+// What someone can offer — every user picks from this, not just mentors.
 export const HELP_AREAS = [
   "Course selection",
   "Recruiting / internships",
@@ -32,4 +34,14 @@ export const HELP_AREAS = [
   "Adjusting to UofT",
   "Study tips",
   "Networking",
+] as const;
+
+// What someone's looking for — deliberately broader than "a mentor", since
+// upper-years are usually after teammates or collaborators, not guidance.
+export const LOOKING_FOR_OPTIONS = [
+  "Mentorship / guidance",
+  "Study partners",
+  "Teammates for projects or competitions",
+  "Industry contacts / networking",
+  "Just meeting people in my program",
 ] as const;

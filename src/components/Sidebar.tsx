@@ -10,11 +10,11 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { href: "/welcome", label: "Home" },
   { href: "/profile", label: "Your profile" },
-  { href: "/mentors", label: "Find a mentor" },
+  { href: "/study-groups", label: "Study groups" },
+  { href: "/mentors", label: "Find people" },
   { href: "/requests", label: "My requests" },
   { href: "/requests/new", label: "Get matched" },
   { href: "/messages", label: "Messages" },
-  { href: "/study-groups", label: "Study groups" },
 ];
 
 export default function Sidebar({ isAdmin }: { isAdmin: boolean }) {

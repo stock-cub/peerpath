@@ -1,12 +1,15 @@
 "use client";
 
-// The profile edit form. Mentor-only fields (help areas, availability) are
-// shown/hidden with a plain useState toggle — no page reload needed.
+// The profile edit form. Everyone fills in both "what I can help with" and
+// "what I'm looking for" — a 4th-year's "looking for" is usually teammates
+// or industry contacts, not mentorship, so this isn't just for mentees.
+// The mentor-specific fields (availability) only show once someone opts
+// into being listed in the mentor directory.
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { saveProfile } from "@/app/(app)/profile/actions";
-import { YEAR_OPTIONS, HELP_AREAS, type Profile } from "@/lib/profile";
+import { YEAR_OPTIONS, HELP_AREAS, LOOKING_FOR_OPTIONS, type Profile } from "@/lib/profile";
 
 const inputClasses =
   "rounded-xl border border-slate-600 bg-slate-800/60 px-4 py-2.5 text-white placeholder:text-slate-500 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40";
@@ -95,7 +98,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
           name="headline"
           maxLength={120}
           defaultValue={profile.headline}
-          placeholder="e.g. Looking for guidance on recruiting"
+          placeholder="e.g. Looking for teammates for case comps"
           className={inputClasses}
         />
       </div>
@@ -114,6 +117,52 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
         />
       </div>
 
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-slate-300">
+          What can you help with?
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {HELP_AREAS.map((area) => (
+            <label
+              key={area}
+              className="flex items-center gap-2 rounded-lg bg-slate-800/70 border border-slate-600 px-3 py-1.5 text-sm text-slate-100"
+            >
+              <input
+                type="checkbox"
+                name="can_help_with"
+                value={area}
+                defaultChecked={profile.can_help_with?.includes(area)}
+                className="h-4 w-4 rounded border-slate-500 text-blue-500 focus:ring-blue-400"
+              />
+              {area}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-slate-300">
+          What are you looking for?
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {LOOKING_FOR_OPTIONS.map((option) => (
+            <label
+              key={option}
+              className="flex items-center gap-2 rounded-lg bg-slate-800/70 border border-slate-600 px-3 py-1.5 text-sm text-slate-100"
+            >
+              <input
+                type="checkbox"
+                name="looking_for"
+                value={option}
+                defaultChecked={profile.looking_for?.includes(option)}
+                className="h-4 w-4 rounded border-slate-500 text-blue-500 focus:ring-blue-400"
+              />
+              {option}
+            </label>
+          ))}
+        </div>
+      </div>
+
       <label className="flex items-center gap-3 rounded-xl border border-slate-600 bg-slate-800/40 px-4 py-3">
         <input
           type="checkbox"
@@ -123,61 +172,36 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
           className="h-5 w-5 rounded border-slate-500 text-blue-500 focus:ring-blue-400"
         />
         <span className="text-sm font-medium text-slate-100">
-          I want to be a mentor
+          List me in the mentor directory
         </span>
       </label>
 
       {isMentor && (
-        <div className="flex flex-col gap-4 rounded-xl bg-blue-950/40 border border-blue-800 p-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-slate-200">
-              What can you help with?
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {HELP_AREAS.map((area) => (
-                <label
-                  key={area}
-                  className="flex items-center gap-2 rounded-lg bg-slate-800/70 border border-slate-600 px-3 py-1.5 text-sm text-slate-100"
-                >
-                  <input
-                    type="checkbox"
-                    name="mentor_help_areas"
-                    value={area}
-                    defaultChecked={profile.mentor_help_areas?.includes(area)}
-                    className="h-4 w-4 rounded border-slate-500 text-blue-500 focus:ring-blue-400"
-                  />
-                  {area}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-slate-200">
-              Availability vibe
-            </span>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-sm text-slate-100">
-                <input
-                  type="radio"
-                  name="mentor_availability"
-                  value="one_off"
-                  defaultChecked={profile.mentor_availability === "one_off"}
-                  className="h-4 w-4 border-slate-500 text-blue-500 focus:ring-blue-400"
-                />
-                One-off chat
-              </label>
-              <label className="flex items-center gap-2 text-sm text-slate-100">
-                <input
-                  type="radio"
-                  name="mentor_availability"
-                  value="ongoing"
-                  defaultChecked={profile.mentor_availability === "ongoing"}
-                  className="h-4 w-4 border-slate-500 text-blue-500 focus:ring-blue-400"
-                />
-                Ongoing mentorship
-              </label>
-            </div>
+        <div className="flex flex-col gap-1 rounded-xl bg-blue-950/40 border border-blue-800 p-4">
+          <span className="text-sm font-medium text-slate-200">
+            Availability vibe
+          </span>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 text-sm text-slate-100">
+              <input
+                type="radio"
+                name="mentor_availability"
+                value="one_off"
+                defaultChecked={profile.mentor_availability === "one_off"}
+                className="h-4 w-4 border-slate-500 text-blue-500 focus:ring-blue-400"
+              />
+              One-off chat
+            </label>
+            <label className="flex items-center gap-2 text-sm text-slate-100">
+              <input
+                type="radio"
+                name="mentor_availability"
+                value="ongoing"
+                defaultChecked={profile.mentor_availability === "ongoing"}
+                className="h-4 w-4 border-slate-500 text-blue-500 focus:ring-blue-400"
+              />
+              Ongoing mentorship
+            </label>
           </div>
         </div>
       )}

@@ -25,9 +25,9 @@ export default function MentorApprovalRow({ mentor }: { mentor: Profile }) {
             {mentor.year_of_study} · {mentor.program}
           </p>
           {mentor.bio && <p className="mt-2 text-sm text-slate-300">{mentor.bio}</p>}
-          {mentor.mentor_help_areas.length > 0 && (
+          {mentor.can_help_with.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">
-              {mentor.mentor_help_areas.map((area) => (
+              {mentor.can_help_with.map((area) => (
                 <span
                   key={area}
                   className="rounded-full bg-blue-950/60 border border-blue-800 px-3 py-1 text-xs text-blue-200"
